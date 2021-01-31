@@ -17,7 +17,6 @@ class TypeDef
 
     def with(name, args = nil)
       DataConstructor.new(name, self, args)
-
       self
     end
   end
@@ -25,12 +24,13 @@ class TypeDef
   class DataConstructor
     attr_accessor :vals
 
-    def initialize(name, data_container, args)
+    def initialize(name, data_container, *args, **argkw)
       @name = name
       @data_container = data_container
       @args = nil
       @vals = {}
-      @arg_defs = args
+      @args = args
+      @argkw = argkw
 
       Object.const_set(name, self)
     end
@@ -48,23 +48,20 @@ class TypeDef
       a_type === type
     end
 
+    def ===(other)
+      is_a?(other)
+    end
+
     def new(*args, **kwargs)
       self_clone = clone
       self_clone.vals = {}
 
-      case @arg_defs
-      when Hash
-        @arg_defs.each do |k, _|
-          self_clone.vals[k] = kwargs[k]
-        end
-      when Array
-        @arg_defs.zip(args).each do |arg_def, arg|
-          self_clone.vals[arg_def] = arg
-        end
-      when NilClass
-        # pass
-      else
-        self_clone.vals[@arg_defs] = args[0]
+      @args.zip(args).each do |arg_def, arg|
+        self_clone.vals[arg_def] = arg
+      end
+
+      @argkw.each do |k, _|
+        self_clone.vals[k] = kwargs[k]
       end
 
       self_clone
@@ -82,6 +79,10 @@ class TypeDef
     def method_missing(name, *args)
       return super(name, *args) unless @vals.key?(name)
       @vals[name]
+    end
+
+    def class
+      @name
     end
   end
 
