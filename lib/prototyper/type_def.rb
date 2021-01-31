@@ -56,11 +56,14 @@ class TypeDef
       self_clone = clone
       self_clone.vals = {}
 
+      # TODO: Add typecheck.
+
       @args.zip(args).each do |arg_def, arg|
         self_clone.vals[arg_def] = arg
       end
 
-      @argkw.each do |k, _|
+      @argkw.each do |k, type|
+        raise "Expected type <#{type}> for value <#{kwargs[k]}>" unless kwargs[k].nil? || kwargs[k].is_a?(type)
         self_clone.vals[k] = kwargs[k]
       end
 
@@ -83,11 +86,20 @@ class TypeDef
         
         @vals[key] = args[0]
       else
-        # To support Ruby default behaviour.
         return super(name, *args) unless @vals.key?(name)
   
         @vals[name]
       end
+    end
+
+    def [](index)
+      raise "Index out of bounds" if index >= @vals.size
+      @vals.values[index]
+    end
+
+    def []=(index, val)
+      raise "Index out of bounds" if index >= @vals.size
+      @vals[@vals.keys[index]] = val
     end
 
     def class
@@ -134,6 +146,8 @@ p Yes.is_a?(Bool)
 
 a = MakeAddress.new("Rene Levesque", 1330)
 p a
+# a[0] = "fe"
+p a[0]
 
 b = MakeBetterAddress.new(street: "Rene Levesque", number: 1330)
 p b
@@ -146,3 +160,9 @@ p err
 
 p Left
 p err.value
+
+
+TypeDef['Foo'].with('MakeFoo', Integer, Integer)
+
+mf = MakeFoo.new(1, 2)
+p mf
