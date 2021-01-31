@@ -15,8 +15,8 @@ class TypeDef
       @name
     end
 
-    def with(name, args = nil)
-      DataConstructor.new(name, self, args)
+    def with(name, *args, **argkw)
+      DataConstructor.new(name, self, *args, **argkw)
       self
     end
   end
@@ -105,9 +105,9 @@ TypeDef['Bool']
   .with('Yes')
   .with('No')
 TypeDef['Address']
-  .with('MakeAddress', [String, Integer])
+  .with('MakeAddress', String, Integer)
 TypeDef['BetterAddress']
-  .with('MakeBetterAddress', { street: String, number: Integer })
+  .with('MakeBetterAddress', street: String, number: Integer)
 TypeDef['Either']
   .with('Left', String)
   .with('Right', Integer)
