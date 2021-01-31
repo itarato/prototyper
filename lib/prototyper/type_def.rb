@@ -77,8 +77,17 @@ class TypeDef
     end
 
     def method_missing(name, *args)
-      return super(name, *args) unless @vals.key?(name)
-      @vals[name]
+      if name.to_s.end_with?('=')
+        key = name.to_s[0..-2].to_sym
+        return super(name, *args) unless @vals.key?(key)
+        
+        @vals[key] = args[0]
+      else
+        # To support Ruby default behaviour.
+        return super(name, *args) unless @vals.key?(name)
+  
+        @vals[name]
+      end
     end
 
     def class
@@ -128,6 +137,7 @@ p a
 
 b = MakeBetterAddress.new(street: "Rene Levesque", number: 1330)
 p b
+# b.number = 12
 p b.street
 p b.number
 
