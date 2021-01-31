@@ -8,11 +8,11 @@ class TypeDef
     end
 
     def to_s
-      @name
+      "<#{@name}>"
     end
 
     def inspect
-      @name
+      to_s
     end
 
     def with(name, *args, **argkw)
@@ -27,7 +27,6 @@ class TypeDef
     def initialize(name, data_container, *args, **argkw)
       @name = name
       @data_container = data_container
-      @args = nil
       @vals = {}
       @args = args
       @argkw = argkw
@@ -58,8 +57,11 @@ class TypeDef
 
       # TODO: Add typecheck.
 
-      @args.zip(args).each do |arg_def, arg|
-        self_clone.vals[arg_def] = arg
+      @args.zip(args).each_with_index do |(type, arg), index|
+        raise "Expected type <#{type}> for value <#{arg}>" unless arg.nil? || arg.is_a?(type)
+
+        key = "#{type}-#{index}"
+        self_clone.vals[key] = arg
       end
 
       @argkw.each do |k, type|
@@ -164,5 +166,5 @@ p err.value
 
 TypeDef['Foo'].with('MakeFoo', Integer, Integer)
 
-mf = MakeFoo.new(1, 2)
+mf = MakeFoo.new(1, "2")
 p mf
