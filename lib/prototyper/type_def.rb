@@ -48,14 +48,14 @@ class TypeDef
     end
 
     def ===(other)
-      is_a?(other)
+      return is_a?(other) if other.is_a?(DataContainer)
+      
+      is_a?(other.type)
     end
 
     def new(*args, **kwargs)
       self_clone = clone
       self_clone.vals = {}
-
-      # TODO: Add typecheck.
 
       @args.zip(args).each_with_index do |(type, arg), index|
         raise "Expected type <#{type}> for value <#{arg}>" unless arg.nil? || arg.is_a?(type)
@@ -66,6 +66,7 @@ class TypeDef
 
       @argkw.each do |k, type|
         raise "Expected type <#{type}> for value <#{kwargs[k]}>" unless kwargs[k].nil? || kwargs[k].is_a?(type)
+
         self_clone.vals[k] = kwargs[k]
       end
 
@@ -86,7 +87,11 @@ class TypeDef
         key = name.to_s[0..-2].to_sym
         return super(name, *args) unless @vals.key?(key)
         
-        @vals[key] = args[0]
+        type = @argkw[key]
+        value = args[0]
+        raise "Expected type <#{type}> for value <#{value}>" unless value.nil? || value.is_a?(type)
+
+        @vals[key] = value
       else
         return super(name, *args) unless @vals.key?(name)
   
@@ -101,6 +106,8 @@ class TypeDef
 
     def []=(index, val)
       raise "Index out of bounds" if index >= @vals.size
+
+      # TODO add typecheck
       @vals[@vals.keys[index]] = val
     end
 
@@ -119,52 +126,3 @@ class TypeDef
     end
   end
 end
-
-TypeDef['Color']
-  .with('Black')
-  .with('Yellow')
-  .with('White')
-TypeDef['Bool']
-  .with('Yes')
-  .with('No')
-TypeDef['Address']
-  .with('MakeAddress', String, Integer)
-TypeDef['BetterAddress']
-  .with('MakeBetterAddress', street: String, number: Integer)
-TypeDef['Either']
-  .with('Left', String)
-  .with('Right', Integer)
-TypeDef['Optional']
-  .with('Nothing')
-  .with('Just', BasicObject)
-
-p Black
-p Black.type
-p White
-p White.type
-p White.is_a?(Color)
-p White.is_a?(Bool)
-p Yes.is_a?(Bool)
-
-a = MakeAddress.new("Rene Levesque", 1330)
-p a
-# a[0] = "fe"
-p a[0]
-
-b = MakeBetterAddress.new(street: "Rene Levesque", number: 1330)
-p b
-# b.number = 12
-p b.street
-p b.number
-
-err = Left.new("missing")
-p err
-
-p Left
-p err.value
-
-
-TypeDef['Foo'].with('MakeFoo', Integer, Integer)
-
-mf = MakeFoo.new(1, "2")
-p mf

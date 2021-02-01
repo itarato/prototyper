@@ -9,7 +9,6 @@ Gem::Specification.new do |s|
   s.authors = ['itarato']
   s.email = 'it.arato@gmail.com'
   s.license = 'GPL-3.0-or-later'
-  # s.homepage = 'https://github.com/itarato/???'
-  # s.add_runtime_dependency 'parser', '~> 2.7', '>= 2.7.1'
+  s.homepage = 'https://github.com/itarato/prototyper'
   s.add_development_dependency 'rspec'
 end
