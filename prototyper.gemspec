@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.summary = 'Prototyper'
   s.version = '0.0.1'
   s.required_ruby_version = '>= 2.6.0'
-  s.date = '2021-02-01'
+  s.date = '2021-02-06'
   s.files = Dir.glob('lib/**/*.rb')
   s.require_paths = ['lib']
   s.authors = ['itarato']
