@@ -20,6 +20,8 @@ describe TypeDef do
 
       red = Red.new
       expect(red.type).to(eq(Color))
+      expect(red.is_a?(Red)).to(eq(true))
+      expect(red.is_a?(Yellow)).to_not(eq(true))
 
       red2 = Red.new
       expect(red).to_not(eq(red2))

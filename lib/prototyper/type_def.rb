@@ -44,6 +44,10 @@ class TypeDef
     end
 
     def is_a?(a_type)
+      if a_type.respond_to?(:__class) && a_type.__class == DataConstructor
+        return self.class == a_type.class
+      end
+
       a_type === type
     end
 
@@ -111,6 +115,7 @@ class TypeDef
       @vals[@vals.keys[index]] = val
     end
 
+    alias_method :__class, :class
     def class
       @name
     end
