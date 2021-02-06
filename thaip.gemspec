@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
-  s.name = 'prototyper'
-  s.summary = 'Prototyper'
+  s.name = 'thaip'
+  s.summary = 'Thaip'
   s.version = '0.0.1'
   s.required_ruby_version = '>= 2.6.0'
   s.date = '2021-02-06'

@@ -1,4 +1,4 @@
-Ruby Prototyper
+Ruby Thaip
 ---------------
 
 This is sortof a toolkit to help prototyping things in Ruby.

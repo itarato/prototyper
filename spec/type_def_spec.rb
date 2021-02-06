@@ -1,4 +1,4 @@
-require_relative '../lib/prototyper'
+require_relative '../lib/thaip'
 
 describe TypeDef do
   describe 'flame test' do
