@@ -24,6 +24,8 @@ class MakeStruct
     end
 
     def __default_value(key)
+      return nil unless __ctor_args[1][key]
+      return __ctor_args[1][key].call if __ctor_args[1][key].is_a?(Proc)
       __ctor_args[1][key]
     end
   end

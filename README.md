@@ -35,13 +35,14 @@ b1g1 = Bxgy.new(buy: 1, get: 1, value: 0.25)
 User = MakeStruct[:name, :age]
 user = User.new(name: 'Steve', age: 12)
 
-class Project < MakeStruct[:name, city: 'London']
+class Project < MakeStruct[:name, city: 'London', badges: -> { [] }]
   def branding
     "#{name} - #{city}"
   end
 end
 
 project = Project.new(name: 'Bug-repellent')
+project.badges << :capital
 puts project.branding
 
 project.city = 'New-London'
